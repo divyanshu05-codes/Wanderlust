@@ -1,171 +1,260 @@
-require("dotenv").config();
+// ==========================================
+// LOAD ENVIRONMENT VARIABLES
+// ==========================================
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
+
+// ==========================================
+// IMPORTS
+// ==========================================
 const express = require("express");
+const app = express();
+
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
+
 const session = require("express-session");
-const MongoStore = require("connect-mongo").default;
+
+// CORRECT IMPORT FOR connect-mongo@6.0.0
+const { MongoStore } = require("connect-mongo");
+
 const flash = require("connect-flash");
+
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const ExpressError = require("./utils/ExpressError.js");
-const User = require("./models/user.js");
-const listingRoutes = require("./routes/listing.js");
-const reviewRoutes = require("./routes/review.js");
-const userRoutes = require("./routes/user.js");
 
-const app = express();
-const dbUrl = process.env.ATLAS_DB_URL;
+const User = require("./models/user.js");
+const ExpressError = require("./utils/ExpressError.js");
+
+
+// ==========================================
+// ROUTERS
+// ==========================================
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
+
+
+// ==========================================
+// PORT
+// ==========================================
 const PORT = process.env.PORT || 8080;
 
-// Environment Validation
-const requiredEnvVariables = [
-  "ATLAS_DB_URL",
-  "MAP_TOKEN",
-  "CLOUD_NAME",
-  "CLOUDINARY_API_KEY",
-  "CLOUDINARY_API_SECRET",
-  "SESSION_SECRET",
-];
 
-for (const variable of requiredEnvVariables) {
-  if (!process.env[variable]) {
-    console.error(`${variable} is missing from .env`);
-    process.exit(1);
-  }
+// ==========================================
+// ENVIRONMENT VARIABLES
+// ==========================================
+const dbUrl = process.env.ATLAS_DB_URL;
+const sessionSecret = process.env.SESSION_SECRET;
+
+
+if (!dbUrl) {
+  console.error("ATLAS_DB_URL is missing.");
+  process.exit(1);
 }
 
-// View Engine
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
+
+if (!sessionSecret) {
+  console.error("SESSION_SECRET is missing.");
+  process.exit(1);
+}
+
+
+// ==========================================
+// DATABASE CONNECTION
+// ==========================================
+async function main() {
+  await mongoose.connect(dbUrl);
+}
+
+
+main()
+  .then(() => {
+    console.log("Connected to MongoDB Atlas");
+  })
+  .catch((err) => {
+    console.error("MongoDB Connection Error:", err);
+    process.exit(1);
+  });
+
+
+// ==========================================
+// VIEW ENGINE
+// ==========================================
 app.engine("ejs", ejsMate);
 
-// Basic Middleware
+app.set("view engine", "ejs");
+
+app.set("views", path.join(__dirname, "views"));
+
+
+// ==========================================
+// EXPRESS MIDDLEWARE
+// ==========================================
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
+
 app.use(methodOverride("_method"));
+
 app.use(express.static(path.join(__dirname, "public")));
 
-// Session Configuration
-if (!process.env.SESSION_SECRET) {
-  throw new Error("SESSION_SECRET is missing from .env");
+
+// ==========================================
+// RENDER / PRODUCTION PROXY
+// ==========================================
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
 }
 
+
+// ==========================================
+// MONGODB SESSION STORE
+// connect-mongo@6.0.0
+// ==========================================
 const store = MongoStore.create({
   mongoUrl: dbUrl,
+
   crypto: {
-    secret: process.env.SESSION_SECRET,
+    secret: sessionSecret,
   },
+
   touchAfter: 24 * 60 * 60,
 });
+
 
 store.on("error", (err) => {
   console.error("SESSION STORE ERROR:", err);
 });
 
+
+// ==========================================
+// SESSION CONFIGURATION
+// ==========================================
 const sessionOptions = {
   store,
-  secret: process.env.SESSION_SECRET,
+
+  name: "wanderlust.sid",
+
+  secret: sessionSecret,
+
   resave: false,
+
   saveUninitialized: false,
+
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7,
     httpOnly: true,
+
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+
     sameSite: "lax",
+
     secure: process.env.NODE_ENV === "production",
   },
 };
 
+
+// ==========================================
+// SESSION MIDDLEWARE
+// ==========================================
 app.use(session(sessionOptions));
+
+
+// ==========================================
+// FLASH MESSAGES
+// ==========================================
 app.use(flash());
 
-// Passport Configuration
+
+// ==========================================
+// PASSPORT
+// ==========================================
 app.use(passport.initialize());
+
 app.use(passport.session());
 
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
-// Global Locals
+passport.use(
+  new LocalStrategy(User.authenticate())
+);
+
+
+passport.serializeUser(
+  User.serializeUser()
+);
+
+
+passport.deserializeUser(
+  User.deserializeUser()
+);
+
+
+// ==========================================
+// GLOBAL LOCALS
+// ==========================================
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
+
   res.locals.error = req.flash("error");
+
   res.locals.currUser = req.user;
+
   next();
 });
 
-// Home Route
+
+// ==========================================
+// HOME
+// ==========================================
 app.get("/", (req, res) => {
   res.redirect("/listings");
 });
 
-// Application Routes
-app.use("/", userRoutes);
-app.use("/listings", listingRoutes);
-app.use("/listings/:id/reviews", reviewRoutes);
 
-// Favicon
-app.get("/favicon.ico", (req, res) => {
-  res.status(204).end();
-});
+// ==========================================
+// ROUTES
+// ==========================================
+app.use("/listings", listingRouter);
 
-// 404 Handler
+app.use(
+  "/listings/:id/reviews",
+  reviewRouter
+);
+
+app.use("/", userRouter);
+
+
+// ==========================================
+// 404
+// ==========================================
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
-// Global Error Handler
+// ==========================================
+// ERROR HANDLER
+// ==========================================
 app.use((err, req, res, next) => {
-  if (res.headersSent) {
-    return next(err);
-  }
+  console.error(err);
 
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Something Went Wrong!";
-
-  console.error(`${statusCode} ERROR:`, err);
+  const {
+    statusCode = 500,
+    message = "Something went wrong!",
+  } = err;
 
   res.status(statusCode).render("error.ejs", {
-    err: {
-      statusCode,
-      message,
-    },
+    message,
   });
 });
 
-// Database Connection and Server Start
-async function startServer() {
-  try {
-    console.log("Connecting to MongoDB Atlas...");
 
-    const validScheme =
-      dbUrl.startsWith("mongodb://") ||
-      dbUrl.startsWith("mongodb+srv://");
-
-    if (!validScheme) {
-      throw new Error(
-        'Invalid MongoDB URI. ATLAS_DB_URL must start with "mongodb://" or "mongodb+srv://"'
-      );
-    }
-
-    await mongoose.connect(dbUrl);
-
-    console.log("MongoDB Atlas connected successfully");
-    console.log("Database:", mongoose.connection.name);
-    console.log("Host:", mongoose.connection.host);
-
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("Database Connection Failed");
-    console.error("Error Name:", error.name);
-    console.error("Error Message:", error.message);
-    process.exit(1);
-  }
-}
-
-startServer();
+// ==========================================
+// START SERVER
+// ==========================================
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
