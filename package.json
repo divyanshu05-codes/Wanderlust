@@ -1,0 +1,35 @@
+{
+    "engines": {
+      "node": "22.17.0"
+  },
+  "name": "wanderlust",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Divyanshu Pal",
+  "license": "ISC",
+  "description": "This project is a travel recommendation system that utilizes AI to provide personalized travel suggestions based on user preferences and interests. The system analyzes user input, such as preferred destinations, activities, and budget, to generate tailored travel recommendations. It aims to enhance the travel planning experience by offering unique and relevant suggestions, making it easier for users to discover new places and plan their trips effectively.",
+  "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.16.2",
+    "cloudinary": "^1.41.3",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "ejs-mate": "^4.0.0",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "joi": "^18.1.2",
+    "method-override": "^3.0.0",
+    "mongoose": "^9.4.1",
+    "multer": "^2.2.0",
+    "multer-storage-cloudinary": "^4.0.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^9.0.3"
+  }
+}

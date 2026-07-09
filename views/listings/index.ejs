@@ -1,0 +1,130 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="filters-wrapper">
+  <button class="filter-scroll-btn filter-left" id="filterLeft" type="button" aria-label="Scroll filters left">
+    <i class="fa-solid fa-chevron-left"></i>
+  </button>
+
+  <div id="filters">
+    <div class="filter active"><i class="fa-solid fa-fire"></i><span>Trending</span></div>
+    <div class="filter"><i class="fa-solid fa-bed"></i><span>Rooms</span></div>
+    <div class="filter"><i class="fa-solid fa-mountain-sun"></i><span>Mountains</span></div>
+    <div class="filter"><i class="fa-solid fa-water"></i><span>Beach</span></div>
+    <div class="filter"><i class="fa-solid fa-umbrella-beach"></i><span>Tropical</span></div>
+    <div class="filter"><i class="fa-solid fa-house"></i><span>Homes</span></div>
+    <div class="filter"><i class="fa-solid fa-city"></i><span>City</span></div>
+    <div class="filter"><i class="fa-solid fa-tree"></i><span>Camping</span></div>
+    <div class="filter"><i class="fa-solid fa-person-skiing"></i><span>Skiing</span></div>
+    <div class="filter"><i class="fa-solid fa-water-ladder"></i><span>Amazing Pools</span></div>
+    <div class="filter"><i class="fa-solid fa-landmark"></i><span>Historical</span></div>
+    <div class="filter"><i class="fa-solid fa-tractor"></i><span>Countryside</span></div>
+    <div class="filter"><i class="fa-solid fa-sailboat"></i><span>Boats</span></div>
+    <div class="filter"><i class="fa-solid fa-snowflake"></i><span>Arctic</span></div>
+    <div class="filter"><i class="fa-solid fa-chess-rook"></i><span>Castles</span></div>
+  </div>
+
+  <button class="filter-scroll-btn filter-right" id="filterRight" type="button" aria-label="Scroll filters right">
+    <i class="fa-solid fa-chevron-right"></i>
+  </button>
+
+  <button class="filters-button" type="button">
+    <i class="fa-solid fa-sliders"></i>
+    <span>Filters</span>
+  </button>
+</div>
+
+<div class="container-fluid listings-container">
+  <% if (!allListings || allListings.length === 0) { %>
+    <div class="text-center py-5">
+      <i class="fa-solid fa-house-circle-xmark fa-3x mb-3"></i>
+      <h3>No listings found</h3>
+      <p class="text-muted">Create your first listing to get started.</p>
+      <a href="/listings/new" class="btn btn-view">Create Listing</a>
+    </div>
+  <% } else { %>
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1 g-4 mt-2">
+      <% allListings.forEach(listing => { %>
+        <div class="col">
+          <div class="card listing-card h-100">
+            <a href="/listings/<%= listing._id %>" class="listing-link">
+              <div class="listing-image-wrapper">
+                <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1566073771259-6a8506099945' %>" class="card-img-top listing-image" alt="<%= listing.title %>" loading="lazy">
+                <button class="wishlist-btn" type="button" aria-label="Add to wishlist">
+                  <i class="fa-regular fa-heart"></i>
+                </button>
+              </div>
+
+              <div class="card-body listing-card-body">
+                <div class="listing-title-row">
+                  <h5 class="card-title"><%= listing.title %></h5>
+                  <span class="listing-rating"><i class="fa-solid fa-star"></i> 4.8</span>
+                </div>
+                <p class="listing-location">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <%= listing.location %><% if (listing.country) { %>, <%= listing.country %><% } %>
+                </p>
+                <p class="listing-price">
+                  <strong>₹<%= Number(listing.price).toLocaleString("en-IN") %></strong>
+                  <span>/ night</span>
+                </p>
+              </div>
+            </a>
+
+            <div class="listing-actions">
+              <a href="/listings/<%= listing._id %>" class="btn btn-view">View</a>
+              <a href="/listings/<%= listing._id %>/edit" class="btn btn-edit">Edit</a>
+              <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" class="delete-form">
+                <button type="submit" class="btn btn-delete">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const filters = document.getElementById("filters");
+    const leftButton = document.getElementById("filterLeft");
+    const rightButton = document.getElementById("filterRight");
+    const filterItems = document.querySelectorAll(".filter");
+    const wishlistButtons = document.querySelectorAll(".wishlist-btn");
+    const deleteForms = document.querySelectorAll(".delete-form");
+
+    leftButton?.addEventListener("click", () => {
+      filters.scrollBy({ left: -400, behavior: "smooth" });
+    });
+
+    rightButton?.addEventListener("click", () => {
+      filters.scrollBy({ left: 400, behavior: "smooth" });
+    });
+
+    filterItems.forEach(filter => {
+      filter.addEventListener("click", () => {
+        filterItems.forEach(item => item.classList.remove("active"));
+        filter.classList.add("active");
+      });
+    });
+
+    wishlistButtons.forEach(button => {
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const icon = button.querySelector("i");
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        button.classList.toggle("liked");
+      });
+    });
+
+    deleteForms.forEach(form => {
+      form.addEventListener("submit", event => {
+        if (!confirm("Are you sure you want to delete this listing?")) {
+          event.preventDefault();
+        }
+      });
+    });
+  });
+</script>

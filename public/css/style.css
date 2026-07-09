@@ -1,0 +1,959 @@
+/* =========================
+   RESET & GLOBAL
+========================= */
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: "Plus Jakarta Sans", sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f7f7f7;
+  color: #222;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+  min-height: 72px;
+  padding: 0.7rem 2rem;
+  background-color: #fff !important;
+  border-bottom: 1px solid #ebebeb;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  z-index: 1050;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  color: #fe424d !important;
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.navbar-brand i {
+  font-size: 2rem;
+}
+
+.navbar-nav {
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  color: #222 !important;
+  font-weight: 500;
+  padding: 0.65rem 0.9rem !important;
+  border-radius: 25px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: #f5f5f5;
+}
+
+.navbar-toggler {
+  border: none;
+  box-shadow: none !important;
+}
+
+.navbar-toggler-icon {
+  filter: invert(1);
+}
+
+
+/* =========================
+   FILTER SECTION
+========================= */
+
+.filters-wrapper {
+  position: sticky;
+  top: 72px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 32px 10px;
+  background-color: #fff;
+  border-bottom: 1px solid #ebebeb;
+}
+
+#filters {
+  display: flex;
+  align-items: center;
+  gap: 38px;
+  flex: 1;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+#filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filter {
+  position: relative;
+  flex: 0 0 auto;
+  min-width: 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 2px 12px;
+  color: #717171;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.filter i {
+  font-size: 1.35rem;
+}
+
+.filter span {
+  white-space: nowrap;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.filter:hover,
+.filter.active {
+  color: #222;
+  opacity: 1;
+}
+
+.filter::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: transparent;
+}
+
+.filter:hover::after {
+  background-color: #ddd;
+}
+
+.filter.active::after {
+  background-color: #222;
+}
+
+
+/* =========================
+   FILTER ARROW BUTTONS
+========================= */
+
+.filter-scroll-btn {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background-color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.filter-scroll-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* =========================
+   FILTER BUTTON
+========================= */
+
+.filters-button {
+  height: 48px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 17px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background-color: #fff;
+  color: #222;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filters-button:hover {
+  border-color: #222;
+}
+
+
+/* =========================
+   LISTINGS CONTAINER
+========================= */
+
+.listings-container {
+  padding: 18px 32px 40px;
+}
+
+
+/* =========================
+   LISTING CARD
+========================= */
+
+.listing-card {
+  border: none;
+  background: transparent;
+}
+
+.listing-link {
+  color: #222;
+  text-decoration: none;
+}
+
+.listing-image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 14px;
+  aspect-ratio: 1 / 0.92;
+  background-color: #eee;
+}
+
+.listing-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.listing-card:hover .listing-image {
+  transform: scale(1.03);
+}
+
+
+/* =========================
+   WISHLIST BUTTON
+========================= */
+
+.wishlist-btn {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 1.45rem;
+  cursor: pointer;
+  z-index: 2;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+}
+
+.wishlist-btn.liked {
+  color: #fe424d;
+}
+
+
+/* =========================
+   LISTING INFORMATION
+========================= */
+
+.listing-card-body {
+  padding: 12px 2px 6px;
+}
+
+.listing-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.listing-title-row .card-title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.listing-rating {
+  flex: 0 0 auto;
+  font-size: 0.85rem;
+}
+
+.listing-rating i {
+  font-size: 0.7rem;
+}
+
+.listing-location {
+  margin: 4px 0;
+  color: #717171;
+  font-size: 0.9rem;
+}
+
+.listing-price {
+  margin: 7px 0 0;
+  color: #222;
+  font-size: 0.9rem;
+}
+
+.listing-price span {
+  font-weight: 400;
+}
+
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.listing-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  padding: 5px 2px 0;
+}
+
+.listing-actions form {
+  margin: 0;
+}
+
+.listing-actions .btn {
+  padding: 6px 13px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.btn-view {
+  border: 1px solid #222;
+  background-color: #222;
+  color: #fff;
+}
+
+.btn-view:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.btn-edit {
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #222;
+}
+
+.btn-edit:hover {
+  background-color: #f5f5f5;
+  color: #222;
+}
+
+.btn-delete {
+  border: 1px solid #fe424d;
+  background-color: #fff;
+  color: #fe424d;
+}
+
+.btn-delete:hover {
+  background-color: #fe424d;
+  color: #fff;
+}
+
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.6rem 1rem;
+  }
+
+  .filters-wrapper {
+    top: 68px;
+    padding: 12px 15px 8px;
+  }
+
+  #filters {
+    gap: 28px;
+  }
+
+  .filter-left,
+  .filter-right,
+  .filters-button {
+    display: none;
+  }
+
+  .listings-container {
+    padding: 10px 15px 30px;
+  }
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+  background-color: #222 !important;
+  border-top: 1px solid #e9ecef;
+  padding: 1rem 0;
+  margin-top: 3rem;
+}
+
+.f-info{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.f-left{
+  color: white;
+  font-size: 0.95rem;
+}
+
+.f-center a{
+  text-decoration: none;
+  color: white;
+  margin: 0 0.5rem;
+  transition: 0.2s;
+}
+
+.f-center a:hover{
+  color: #fe424d;
+}
+
+.f-right a{
+  color: white;
+  margin-left: 0.8rem;
+  font-size: 1.1rem;
+  transition: 0.2s;
+}
+
+.f-right a:hover{
+  color: #fe424d;
+}
+
+
+/* =========================
+   LISTING CARDS
+========================= */
+
+.listing-card{
+  border: none !important;
+  border-radius: 1.2rem !important;
+  overflow: hidden;
+  background-color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.listing-card:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+}
+
+.card-img-top{
+  width: 100% !important;
+  object-fit: cover !important;
+  border-radius: 1.2rem 1.2rem 0 0 !important;
+}
+
+.card-body{
+  padding: 1rem !important;
+}
+
+.card-title{
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.card-text{
+  color: #555;
+  line-height: 1.5;
+}
+
+.price{
+  color: #fe424d;
+  font-weight: 700;
+}
+
+
+/* =========================
+   SHOW PAGE
+========================= */
+
+.show-img{
+  height: 30rem !important;
+  object-fit: cover !important;
+}
+
+.show-card{
+  border-radius: 1.3rem !important;
+  overflow: hidden;
+}
+
+.show-body{
+  padding: 1.5rem;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn{
+  border-radius: 10px !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+}
+
+.btn-primary{
+  background-color: #fe424d !important;
+  border: none !important;
+}
+
+.btn-primary:hover{
+  background-color: #e63946 !important;
+}
+
+.btn-dark{
+  background-color: #222 !important;
+  border: none !important;
+}
+
+.btn-dark:hover{
+  background-color: #000 !important;
+}
+
+.btn-danger{
+  border: none !important;
+}
+
+.btn-danger:hover{
+  background-color: #bb2d3b !important;
+}
+
+.btn-edit{
+  background-color: #0d6efd;
+  color: black ;
+  text-decoration: none;
+}
+
+.btn-edit:hover{
+  background-color: #0b5ed7;
+}
+
+.btn-delete{
+  background-color: #dc3545;
+  color: white !important;
+  text-decoration: none;
+}
+
+.btn-delete:hover{
+  background-color: #bb2d3b;
+}
+
+
+/* =========================
+   FORMS
+========================= */
+
+form{
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+input,
+textarea{
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  border-radius: 10px;
+  border: 1px solid #ced4da;
+  outline: none;
+}
+
+textarea{
+  resize: none;
+}
+
+.form-control:focus{
+  border-color: #222 !important;
+  box-shadow: none !important;
+}
+
+
+/* =========================
+   REVIEW SECTION
+========================= */
+
+.review-card{
+  border-radius: 1.2rem !important;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+.review-card:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+.review-comment{
+  color: #555;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.stars{
+  color: #ffc107;
+  font-size: 1.3rem;
+  letter-spacing: 3px;
+}
+
+
+/* =========================
+   STARABILITY
+========================= */
+
+.starability-slot{
+  min-height: 0;
+}
+
+
+/* =========================
+   LIST GROUP
+========================= */
+
+.list-group-item{
+  border: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:768px){
+
+  .show-img{
+    height: 18rem !important;
+  }
+
+  .navbar{
+    height: auto;
+    padding: 0.7rem;
+  }
+
+  .f-info{
+    flex-direction: column;
+    gap: 0.7rem;
+    text-align: center;
+  }
+
+  .card-img-top{
+    height: 220px;
+  }
+}
+
+#map { 
+  height: 400px;
+  width: 50vw;
+  border-radius: 1.2rem; 
+}
+
+/* =========================
+   THEME VARIABLES
+========================= */
+
+:root {
+  --page-bg: #ffffff;
+  --surface-bg: #ffffff;
+  --text-color: #222222;
+  --muted-color: #717171;
+  --border-color: #ebebeb;
+  --hover-bg: #f5f5f5;
+}
+
+body.dark-mode {
+  --page-bg: #121212;
+  --surface-bg: #1c1c1c;
+  --text-color: #f5f5f5;
+  --muted-color: #b0b0b0;
+  --border-color: #383838;
+  --hover-bg: #2a2a2a;
+}
+
+
+/* =========================
+   PAGE
+========================= */
+
+body {
+  background-color: var(--page-bg);
+  color: var(--text-color);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+
+/* =========================
+   NAVBAR DARK MODE
+========================= */
+
+.navbar {
+  background-color: var(--surface-bg) !important;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-link {
+  color: var(--text-color) !important;
+}
+
+.nav-link:hover {
+  background-color: var(--hover-bg);
+}
+
+.navbar-toggler {
+  border-color: var(--border-color);
+}
+
+body.dark-mode .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+
+/* =========================
+   DARK MODE BUTTON
+========================= */
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.theme-toggle {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background-color: var(--surface-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background-color: var(--hover-bg);
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================
+   FILTERS DARK MODE
+========================= */
+
+.filters-wrapper {
+  background-color: var(--surface-bg);
+  border-bottom-color: var(--border-color);
+}
+
+.filter {
+  color: var(--muted-color);
+}
+
+.filter:hover,
+.filter.active {
+  color: var(--text-color);
+}
+
+.filter.active::after {
+  background-color: var(--text-color);
+}
+
+.filter-scroll-btn,
+.filters-button {
+  background-color: var(--surface-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+
+/* =========================
+   LISTING CARDS DARK MODE
+========================= */
+
+.listing-card {
+  background-color: var(--surface-bg);
+  color: var(--text-color);
+}
+
+.listing-link {
+  color: var(--text-color);
+}
+
+.listing-title-row .card-title {
+  color: var(--text-color);
+}
+
+.listing-location {
+  color: var(--muted-color);
+}
+
+.listing-price {
+  color: var(--text-color);
+}
+
+
+/* =========================
+   BUTTON DARK MODE
+========================= */
+
+.btn-edit {
+  background-color: var(--surface-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.btn-edit:hover {
+  background-color: var(--hover-bg);
+  color: var(--text-color);
+}
+
+
+/* =========================
+   EXACTLY 3 CARDS PER ROW
+========================= */
+
+@media (min-width: 992px) {
+  .listings-container .row > .col {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+}
+
+
+/* =========================
+   MOBILE NAVBAR
+========================= */
+
+@media (max-width: 767px) {
+  .navbar-right {
+    align-items: flex-start;
+  }
+
+  .theme-toggle {
+    margin-top: 6px;
+  }
+}
+
+.navbar-search {
+  margin: 0 16px;
+}
+
+.search-box {
+  width: 430px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 24px;
+  background-color: var(--surface-bg, #fff);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.search-box:focus-within {
+  border-color: #fe424d;
+  box-shadow: 0 2px 10px rgba(254, 66, 77, 0.18);
+}
+
+.search-icon {
+  flex-shrink: 0;
+  color: var(--muted-color, #717171);
+  font-size: 0.85rem;
+}
+
+.search-box input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-color, #222);
+  font-size: 0.85rem;
+}
+
+.search-box input::placeholder {
+  color: var(--muted-color, #717171);
+}
+
+.search-box input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.search-btn {
+  height: 32px;
+  margin-right: 3px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 20px;
+  background-color: #fe424d;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background-color: #e63b46;
+}
+@media (max-width: 1100px) {
+  .search-box {
+    width: 350px;
+  }
+}
+
+@media (max-width: 991px) {
+  .navbar-search {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+}

@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-md sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/listings">
+      <i class="fa-regular fa-compass me-2"></i>WanderLust
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/listings">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/listings">Explore</a></li>
+        <li class="nav-item"><a class="nav-link" href="/listings/new">Create New</a></li>
+      </ul>
+
+      <form class="navbar-search" action="/listings" method="GET">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input
+            type="search"
+            name="search"
+            value="<%= typeof search !== 'undefined' ? search : '' %>"
+            placeholder="Search destinations"
+            aria-label="Search listings"
+          >
+          <button type="submit" class="search-btn">Search</button>
+        </div>
+      </form>
+
+      <ul class="navbar-nav navbar-right">
+        <% if (!currUser) { %>
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/signup">Register</a></li>
+        <% } else { %>
+          <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+        <% } %>
+
+        <li class="nav-item">
+          <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+            <i id="themeIcon" class="fa-solid fa-moon"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

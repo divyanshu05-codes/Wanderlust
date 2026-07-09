@@ -1,0 +1,151 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="row mt-5 mb-5">
+  <div class="col-md-8 col-lg-6 offset-md-2 offset-lg-3">
+    
+    <div class="card shadow border-0">
+      <div class="card-body p-4">
+        
+        <h2 class="text-center mb-4">Create Your Account</h2>
+
+        <form action="/signup" method="POST" class="needs-validation" novalidate>
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              placeholder="Enter username"
+              minlength="3"
+              maxlength="20"
+              required
+            />
+            <div class="invalid-feedback">
+              Username must be between 3 and 20 characters.
+            </div>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            />
+            <div class="invalid-feedback">
+              Please provide a valid email address.
+            </div>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Enter password"
+              minlength="6"
+              required
+            />
+            <div class="invalid-feedback">
+              Password must be at least 6 characters long.
+            </div>
+            <div class="valid-feedback">
+              Strong enough!
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPassword"
+              placeholder="Confirm password"
+              required
+            />
+            <div class="invalid-feedback">
+              Passwords must match.
+            </div>
+          </div>
+
+          <!-- Terms -->
+          <div class="form-check mb-4">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="terms"
+              required
+            />
+            <label class="form-check-label" for="terms">
+              I agree to the Terms & Conditions
+            </label>
+            <div class="invalid-feedback">
+              You must agree before submitting.
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="d-grid">
+            <button class="btn btn-dark btn-lg" type="submit">
+              Sign Up
+            </button>
+          </div>
+
+          <!-- Login Redirect -->
+          <p class="text-center mt-3 mb-0">
+            Already have an account?
+            <a href="/login">Login here</a>
+          </p>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap Validation + Password Match -->
+<script>
+(() => {
+  'use strict';
+
+  const forms = document.querySelectorAll('.needs-validation');
+
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      const password = document.getElementById('password');
+      const confirmPassword = document.getElementById('confirmPassword');
+
+      if (password.value !== confirmPassword.value) {
+        confirmPassword.setCustomValidity("Passwords do not match");
+      } else {
+        confirmPassword.setCustomValidity("");
+      }
+
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      form.classList.add('was-validated');
+    }, false);
+  });
+})();
+</script>

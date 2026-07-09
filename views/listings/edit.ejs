@@ -1,0 +1,189 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-3">
+  <div class="col-8 offset-2">
+
+    <h3>Edit Your Listing</h3>
+
+    <form
+      action="/listings/<%= listing._id %>?_method=PUT"
+      method="POST"
+      enctype="multipart/form-data"
+      class="needs-validation"
+      novalidate
+    >
+
+      <!-- TITLE -->
+      <div class="mb-3">
+
+        <label for="title" class="form-label">
+          Title
+        </label>
+
+        <input
+          id="title"
+          name="listing[title]"
+          value="<%= listing.title %>"
+          type="text"
+          class="form-control"
+          required
+        >
+
+        <div class="invalid-feedback">
+          Please enter a title.
+        </div>
+
+      </div>
+
+
+      <!-- DESCRIPTION -->
+      <div class="mb-3">
+
+        <label for="description" class="form-label">
+          Description
+        </label>
+
+        <textarea
+          id="description"
+          name="listing[description]"
+          class="form-control"
+          required
+        ><%= listing.description %></textarea>
+
+        <div class="invalid-feedback">
+          Please enter a description.
+        </div>
+
+      </div>
+
+
+      <!-- CURRENT IMAGE -->
+      <% if (listing.image && listing.image.url) { %>
+
+        <div class="mb-3">
+
+          <label class="form-label">
+            Current Image
+          </label>
+
+          <br>
+
+          <img
+            src="<%= listing.image.url %>"
+            alt="Current Listing Image"
+            style="
+              width: 250px;
+              height: 180px;
+              object-fit: cover;
+              border-radius: 8px;
+            "
+          >
+
+        </div>
+
+      <% } %>
+
+
+      <!-- NEW IMAGE -->
+      <div class="mb-3">
+
+        <label for="image" class="form-label">
+          Upload New Image
+        </label>
+
+        <input
+          id="image"
+          name="image"
+          type="file"
+          class="form-control"
+          accept="image/jpeg,image/jpg,image/png,image/webp"
+        >
+
+        <small class="text-muted">
+          Leave this empty to keep the current image.
+        </small>
+
+      </div>
+
+
+      <!-- PRICE -->
+      <div class="mb-3">
+
+        <label for="price" class="form-label">
+          Price
+        </label>
+
+        <input
+          id="price"
+          name="listing[price]"
+          value="<%= listing.price %>"
+          type="number"
+          min="0"
+          class="form-control"
+          required
+        >
+
+        <div class="invalid-feedback">
+          Please enter a valid price.
+        </div>
+
+      </div>
+
+
+      <!-- COUNTRY -->
+      <div class="mb-3">
+
+        <label for="country" class="form-label">
+          Country
+        </label>
+
+        <input
+          id="country"
+          name="listing[country]"
+          value="<%= listing.country %>"
+          type="text"
+          class="form-control"
+          required
+        >
+
+        <div class="invalid-feedback">
+          Please enter a country.
+        </div>
+
+      </div>
+
+
+      <!-- LOCATION -->
+      <div class="mb-3">
+
+        <label for="location" class="form-label">
+          Location
+        </label>
+
+        <input
+          id="location"
+          name="listing[location]"
+          value="<%= listing.location %>"
+          type="text"
+          class="form-control"
+          required
+        >
+
+        <div class="invalid-feedback">
+          Please enter a location.
+        </div>
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="btn btn-dark"
+      >
+        Update Listing
+      </button>
+
+    </form>
+
+  </div>
+</div>
